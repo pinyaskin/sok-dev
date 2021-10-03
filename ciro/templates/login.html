@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Авторизация | Сок</title>
+
+  <link rel="stylesheet" href="{% static 'admin/icheck-bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'admin/adminlte.min.css' %}">
+  <link rel="stylesheet" href="{% static 'admin/mdb.min.css' %}">
+  <link rel="stylesheet" href="{% static 'admin/all.min.css' %}">
+  <link rel="shortcut icon" type="image/png" href="{% static 'admin/img/favicon.ico' %}"/
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <h1><b>Сок</b></h1>
+    <h6>Система Оперативного Контроля</h6>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Войдите в свой аккаунт</p>
+
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          {{ form.username }}
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          {{ form.password }}
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-block btn-color">Войти</button>
+          </div>
+      </form>
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+      <p class="mb-1">
+        <a href="forgot-password.html">Я забыл пароль</a>
+      </p>
+      <p class="mb-0">
+        <a href="" class="text-center">Register a new membership</a>
+      </p>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="{% static 'admin/js/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'admin/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'admin/js/adminlte.min.js' %}"></script>
+<script>
+    var form_fields = document.getElementsByTagName('input')
+    form_fields[1].placeholder='Логин';
+    form_fields[2].placeholder='Пароль';
+
+    for (var field in form_fields){
+        form_fields[field].className += ' form-control'
+    }
+</script>
+</body>
+</html>

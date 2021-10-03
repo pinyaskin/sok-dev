@@ -1,0 +1,38 @@
+.user-color {
+    color: #2B2000;
+}
+
+.sidebar-custom {
+    background-color: #fff;
+}
+
+.nav-link.active {
+    background-color: #f29c1f !important;
+}
+
+a {
+    color: #2B2000 !important;
+}
+
+.nav-link {
+    transition: .1s !important;
+}
+
+.nav-link:hover {
+    border-radius: .5rem;
+    background-color: rgba(242,156,31,0.8);
+}
+
+.nav-link .activated {
+    border-radius: .5rem;
+    background-color: rgba(242,156,31,0.8);
+}
+
+.notification {
+    color: red;
+    /*color: #f4f6f9;*/
+}
+
+.btn-color {
+    background-color: #f29c1f;
+}

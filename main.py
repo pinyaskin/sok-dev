@@ -2,8 +2,8 @@ import asyncio
 import panoramisk
 from panoramisk import Manager
 from threading import Thread
-import dbscript
-import timer as tm
+import sqlite3 as sq
+import time
 
 manager = Manager(loop=asyncio.get_event_loop(),
                   host='127.0.0.1',
@@ -43,9 +43,9 @@ async def callback(mngr: panoramisk.Manager, msg: panoramisk.message) -> None:
 
 def report(callid, reportmsg):
     if reportmsg == 'normal':
-        dbscript.status_update(callid, 1)
+        status_update(callid, 1)
     elif reportmsg == 'warning':
-        dbscript.status_update(callid, 2)
+        status_update(callid, 2)
 
 
 def main(mngr: panoramisk.Manager) -> None:
@@ -59,9 +59,42 @@ def main(mngr: panoramisk.Manager) -> None:
         exit(0)
 
 
+# обновляем статус в базе данных
+def status_update(caller, report):
+    if report == 1:
+        stat = 'норма'
+    else:
+        stat = 'тревога'
+    with sq.connect("ciro/db.sqlite3") as con:
+        cur = con.cursor()
+        cur.execute("UPDATE posts SET status = '"+stat+"' WHERE callerid == "+caller)
+        cur.execute("UPDATE posts SET lastcall = '"+str(time.time()+18000)+"'WHERE callerid == "+caller)
+        con.commit()
+
+
+# проверяем актуальность отзвона каждые 2 часа
+def check_time():
+    while 1:
+        with sq.connect("ciro/db.sqlite3") as con:
+            cur = con.cursor()
+            new = cur.execute("SELECT callerid,lastcall FROM posts")
+            warn_obj = []
+            for values in new:
+                caller = str(values[0])
+                last = float(values[1] or 0)
+                now = time.time()+18000
+                if type(last) == float:
+                    dif = now - last
+                    if dif >= 7260:
+                        warn_obj.append(caller)
+            for caller_list in warn_obj:
+                cur.execute("UPDATE posts SET status = 'тревога' WHERE callerid ==" + caller_list)
+        time.sleep(600)
+
+
 if __name__ == '__main__':
     check_thread1 = Thread(target=main, args=(manager,))
-    timer_thread2 = Thread(target=tm.check_time)
+    timer_thread2 = Thread(target=check_time)
     check_thread1.start()
     timer_thread2.start()
     check_thread1.join()

@@ -1,5 +1,7 @@
 ciro/AdminLTE/
 NOTINPROJECT/
+testes.py
+test_lib.py
 
 # Django #
 *.log
